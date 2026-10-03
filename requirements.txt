@@ -1,0 +1,2 @@
+# Milestone 1 uses only the Python standard library.
+# External packages will be added in later milestones.
