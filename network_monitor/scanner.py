@@ -508,6 +508,7 @@ def run_scan():
     )
     print("=" * 70)
 
+    return records
 
 if __name__ == "__main__":
     run_scan()

@@ -11,6 +11,13 @@ from network_monitor.scanner import (
     build_device_records,
 )
 
+from network_monitor.performance import (
+    analyze_network_performance,
+    print_performance_summary,
+    save_performance_results,
+    generate_performance_alerts,
+)
+
 
 SCAN_INTERVAL = 30
 
@@ -154,9 +161,24 @@ def run_monitor():
                 arp_table
             )
 
-            current_devices = (
-                get_device_ips(records)
+            # Analyze network performance
+            performance_summary = (
+                analyze_network_performance(records)
             )
+            print_performance_summary(
+                performance_summary
+            ) 
+            performance_alerts = generate_performance_alerts(
+                performance_summary
+            )
+
+            for alert in performance_alerts:
+                log_event(f"NETWORK PERFORMANCE WARNING: {alert}")
+
+            save_performance_results(records) 
+
+            current_devices = get_device_ips(records)
+
 
             if first_scan:
 
