@@ -1,209 +1,173 @@
 # IoT Network Monitor
 
-A Python-based local network monitoring system designed to discover devices, test network connectivity, collect device information, and provide a foundation for an IoT network monitoring platform.
+A Python-based network monitoring tool designed to discover devices on a local network, identify the active subnet, and monitor network latency.
 
-## Project Status
+This project was developed as a networking portfolio project to demonstrate practical skills in **Python, TCP/IP networking, subnet detection, device discovery, and network performance monitoring**.
 
-**Current milestone:** Milestone 1 — Network Discovery
+## Features
 
-### Objectives
+* Automatic local IP address detection
+* Automatic subnet detection
+* Local network device discovery
+* IP address scanning
+* Host availability checking
+* Network latency monitoring
+* Response-time measurement
+* Command-line interface
+* Clear and structured monitoring results
 
-* Discover active devices on a local IPv4 network
-* Identify device IP addresses
-* Retrieve MAC addresses from the local ARP table where available
-* Test device reachability using ICMP
-* Record network discovery results
-* Build a foundation for ESP32-based IoT monitoring
+## Technologies Used
 
-## System Architecture
-
-```text
-                 Wi-Fi Router
-                      |
-        +-------------+-------------+
-        |             |             |
-      Laptop        Phone         ESP32
-        |
-        |
-  Python Network Monitor
-        |
-  +-----+----------------+
-  |                      |
-Network Scanner       ARP Table
-  |                      |
-  +----------+-----------+
-             |
-        CSV Results
-```
-
-## Technologies
-
-* Python
-* IPv4 networking
-* ICMP
-* ARP
+* **Python 3**
+* Python `socket` library
+* Python `ipaddress` library
+* ICMP/network connectivity testing
 * TCP/IP networking concepts
-* CSV data logging
-* Git/GitHub
-
-## Current Features
-
-### Milestone 1
-
-* Automatic local IP detection
-* Local `/24` network discovery
-* Concurrent host scanning
-* ICMP connectivity testing
-* ARP table parsing
-* IP and MAC address reporting
-* CSV result logging
+* IPv4 subnetting
 
 ## Project Structure
 
 ```text
 iot-network-monitor/
 │
-├── network_monitor/
-│   ├── __init__.py
-│   └── scanner.py
-│
-├── data/
-│
-├── tests/
-│
-├── main.py
+├── network_monitor.py
 ├── README.md
 ├── requirements.txt
 └── .gitignore
 ```
+
+## How It Works
+
+The network monitor follows these main steps:
+
+1. Detects the computer's local IP address.
+2. Determines the active network interface and subnet.
+3. Calculates the local network range.
+4. Scans the subnet for active devices.
+5. Tests device availability.
+6. Measures network response time.
+7. Displays the results in the terminal.
+
+### Example
+
+```text
+IoT Network Monitor
+===================
+
+Local IP Address: 192.168.1.10
+Subnet: 192.168.1.0/24
+
+Scanning network...
+
+192.168.1.1    ACTIVE    2.31 ms
+192.168.1.5    ACTIVE    8.74 ms
+192.168.1.10   ACTIVE    0.42 ms
+192.168.1.15   ACTIVE    15.62 ms
+
+Scan complete.
+```
+
+## Subnet Detection
+
+The application automatically determines the local network configuration instead of requiring the user to manually enter the subnet.
+
+For example:
+
+```text
+Local IP: 192.168.1.10
+Network:  192.168.1.0/24
+```
+
+This allows the monitor to adapt to different local networks.
+
+## Latency Monitoring
+
+The application measures the response time of devices on the network.
+
+Latency is useful for identifying:
+
+* Slow network responses
+* Unstable connections
+* Potential connectivity problems
+* Devices experiencing high response times
+
+Lower latency generally indicates a faster response between the monitoring computer and the target device.
 
 ## Installation
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/iot-network-monitor.git
+git clone https://github.com/Refilwe958/iot-network-monitor.git
 ```
 
-Enter the project directory:
+Navigate into the project directory:
 
 ```bash
 cd iot-network-monitor
 ```
 
-Create a virtual environment:
+Install the required dependencies:
 
 ```bash
-python -m venv .venv
-```
-
-Activate it on Windows:
-
-```powershell
-.venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
 Run the network monitor:
 
 ```bash
-python main.py
+python network_monitor.py
 ```
 
-## Example Output
+## Testing
 
-```text
-============================================================
-        IoT NETWORK MONITOR - MILESTONE 1
-============================================================
+The project was tested on a local network to verify:
 
-Local IP address: 192.168.1.105
-Network detected: 192.168.1.0/24
+* Local IP detection
+* Subnet calculation
+* Device discovery
+* Host availability
+* Network latency measurement
+* Correct terminal output
 
-Scanning network...
-Hosts to check: 254
+Testing was performed using multiple devices connected to the same local network.
 
-[ONLINE]  192.168.1.1
-[ONLINE]  192.168.1.102
-[ONLINE]  192.168.1.105
+## Future Improvements
 
-DISCOVERED DEVICES
+Planned improvements include:
 
-IP ADDRESS        MAC ADDRESS         STATUS
-------------------------------------------------------------
-192.168.1.1       XX-XX-XX-XX-XX-XX   ONLINE
-192.168.1.102     XX-XX-XX-XX-XX-XX   ONLINE
-192.168.1.105     XX-XX-XX-XX-XX-XX   ONLINE
-```
+* MAC address detection
+* Device manufacturer identification
+* Device name/hostname detection
+* Continuous network monitoring
+* Packet-loss monitoring
+* Network performance graphs
+* CSV logging
+* Web-based monitoring dashboard
+* IoT device classification
+* Alerts for devices with high latency or packet loss
 
-## Limitations
+## Learning Outcomes
 
-The current version:
+This project helped develop practical knowledge of:
 
-* Assumes a `/24` IPv4 network
-* Uses ICMP responses for basic reachability
-* Relies on the operating system ARP table for MAC addresses
-* May not identify devices that block ICMP
-* Does not yet identify device manufacturers
-* Does not yet monitor bandwidth or packet traffic
-* Does not yet provide a graphical dashboard
-
-## Planned Development
-
-### Milestone 1 — Network Discovery
-
-* [x] Local IP detection
-* [x] Host discovery
-* [x] ICMP reachability
-* [x] ARP-based MAC discovery
-* [x] CSV logging
-
-### Milestone 2 — ESP32 IoT Node
-
-* [ ] ESP32 Wi-Fi connection
-* [ ] Sensor data collection
-* [ ] MQTT communication
-* [ ] Device heartbeat
-
-### Milestone 3 — Network Monitoring
-
-* [ ] Continuous device monitoring
-* [ ] Latency monitoring
-* [ ] Packet-loss monitoring
-* [ ] Device state changes
-* [ ] Network event logging
-
-### Milestone 4 — Dashboard
-
-* [ ] Web dashboard
-* [ ] Device table
-* [ ] Network statistics
-* [ ] Sensor data visualization
-* [ ] Alerts
-
-### Milestone 5 — Packet Analysis
-
-* [ ] Wireshark packet capture
-* [ ] MQTT traffic analysis
-* [ ] TCP/UDP analysis
-* [ ] DNS analysis
-* [ ] Network performance analysis
-
-## Engineering Skills Demonstrated
-
-This project demonstrates practical experience with:
-
-* Computer networking
 * IPv4 addressing
-* Subnetting
-* ICMP
-* ARP
-* Network monitoring
-* Python programming
-* Data logging
-* IoT communication
-* Embedded networking
-* Technical documentation
+* Subnetting and CIDR notation
+* TCP/IP networking
+* Network device discovery
+* Network latency
+* Python network programming
+* Troubleshooting network connectivity
+* Git and GitHub version control
 
-## Disclaimer
+## Author
 
-This project is intended for monitoring networks that you own or are authorized to test.
+**Refilwe Masupe**
+
+Bachelor of Engineering Technology in Electrical Engineering
+
+South Africa
+
+### Portfolio Focus
+
+Electrical Engineering | IoT | Networking | Embedded Systems | Python | Automation | Control Systems
