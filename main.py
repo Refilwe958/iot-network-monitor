@@ -1,5 +1,5 @@
-from network_monitor.scanner import run_scan
+from network_monitor.monitor import run_monitor
 
 
 if __name__ == "__main__":
-    run_scan()
+    run_monitor()

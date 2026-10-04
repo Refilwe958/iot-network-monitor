@@ -25,3 +25,6 @@ data/*.csv
 # OS files
 .DS_Store
 Thumbs.db
+
+# Network monitoring logs
+logs/*.log
