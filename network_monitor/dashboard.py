@@ -27,7 +27,7 @@ EVENT_FILE = Path("logs/network_events.log")
 # PAGE TITLE
 # --------------------------------------------------
 
-st.title("🌐 IoT Network Monitor")
+st.title("IoT Network Monitor")
 st.caption("Real-time LAN monitoring and network performance dashboard")
 
 
