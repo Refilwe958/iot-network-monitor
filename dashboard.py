@@ -28,8 +28,15 @@ EVENT_FILE = Path("logs/network_events.log")
 # --------------------------------------------------
 
 st.title("IoT Network Monitor")
-st.caption("Real-time LAN monitoring and network performance dashboard")
-
+st.caption("Real-time monitoring of IoT device network performance")
+st.divider()
+st.markdown(
+    """
+    This dashboard provides an overview of Downtown Student Living network performance.
+    
+    Designed by Olga Masupe.
+    """
+)
 
 # --------------------------------------------------
 # LOAD PERFORMANCE DATA
