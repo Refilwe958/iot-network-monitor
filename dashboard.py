@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
+from esp32_health import check_esp32_health
 
 try:
     from streamlit_autorefresh import st_autorefresh
@@ -142,6 +143,56 @@ if ESP32_FILE.exists():
 else:
     esp32_data = pd.DataFrame()
 
+
+st.subheader("ESP32 Health Monitoring")
+
+if not esp32_data.empty:
+    latest = esp32_data.iloc[-1]
+
+    rssi = pd.to_numeric(
+        latest.get("rssi"), errors="coerce"
+    )
+
+    last_seen = pd.to_datetime(
+        latest.get("timestamp"), errors="coerce", utc=True
+    )
+
+    if pd.isna(last_seen):
+        last_seen = None
+    else:
+        last_seen = last_seen.to_pydatetime()
+
+    result = check_esp32_health(
+        rssi=None if pd.isna(rssi) else float(rssi),
+        last_seen=last_seen,
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("ESP32 Health", result["status"])
+
+    with col2:
+        age = result["telemetry_age_seconds"]
+        st.metric(
+            "Telemetry Age",
+            f"{age:.0f} seconds" if age is not None else "Unknown",
+        )
+
+    if result["status"] == "HEALTHY":
+        st.success("ESP32 telemetry is healthy.")
+    elif result["status"] == "WARNING":
+        st.warning("ESP32 health warning detected.")
+    elif result["status"] == "STALE":
+        st.error("ESP32 telemetry is stale.")
+    else:
+        st.info("ESP32 health status is unknown.")
+
+    for alert in result["alerts"]:
+        st.write(f"- {alert}")
+
+else:
+    st.info("No ESP32 telemetry is available for health monitoring yet.")
 
 # --------------------------------------------------
 # CALCULATE DASHBOARD METRICS
