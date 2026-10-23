@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
+from network_monitor.availability import load_availability_history
 
 try:
     from streamlit_autorefresh import st_autorefresh
@@ -633,4 +634,63 @@ else:
     st.info(
         "No ESP32 telemetry available yet. "
         "Start mqtt_receiver.py and check the MQTT connection."
+    )
+
+
+# --------------------------------------------------
+# DEVICE AVAILABILITY HISTORY
+# --------------------------------------------------
+
+st.divider()
+st.header("Device Availability History")
+
+st.caption(
+    "Recorded estimates calculated from device status events. "
+    "Durations include only intervals between consecutive events; "
+    "time after the last event is not assumed."
+)
+
+availability_history = load_availability_history()
+
+if availability_history:
+    availability_df = pd.DataFrame(availability_history)
+
+    availability_df["last_event"] = pd.to_datetime(
+        availability_df["last_event"]
+    ).dt.strftime("%Y-%m-%d %H:%M:%S")
+
+    display_columns = [
+        "ip_address",
+        "current_status",
+        "online_hours",
+        "outage_hours",
+        "recorded_outages",
+        "last_event",
+    ]
+
+    st.dataframe(
+        availability_df[display_columns].rename(
+            columns={
+                "ip_address": "IP Address",
+                "current_status": "Last Recorded Status",
+                "online_hours": "Recorded Online Hours",
+                "outage_hours": "Recorded Outage Hours",
+                "recorded_outages": "Recorded Outages",
+                "last_event": "Last Status Event",
+            }
+        ),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+    st.caption(
+        "Last recorded status is not a live status check. "
+        "Availability history depends on the events captured "
+        "while monitoring was running."
+    )
+
+else:
+    st.info(
+        "No device availability events found yet. "
+        "Run the network monitor to record device status changes."
     )
